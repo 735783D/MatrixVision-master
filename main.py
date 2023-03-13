@@ -18,21 +18,23 @@ class Matrix:
         self.cols_speed = np.random.randint(100, 250, size=self.SIZE)
         self.prerendered_chars = self.get_prerendered_chars()
 
-        self.image = self.get_image("0_original.jpg")
+# un/comment this line to use an image or the camera 
+# if left uncommented and you are trying to use the camera you will get an error.
+        #self.image = self.get_image("0_original.jpg")
 
 # un/comment this block to use your webcam
-    # def get_frame(self):
-    #     image = app.cam.get_image()
-    #     image = pg.transform.scale(image, self.app.RES)
-    #     pixel_array = pg.pixelarray.PixelArray(image)
-    #     return pixel_array
-
-# un/comment this block to use pictures
-    def get_image(self, path_to_file):
-        image = pg.image.load(path_to_file)
+    def get_frame(self):
+        image = app.cam.get_image()
         image = pg.transform.scale(image, self.app.RES)
         pixel_array = pg.pixelarray.PixelArray(image)
         return pixel_array
+
+# un/comment this block to use pictures
+#     def get_image(self, path_to_file):
+#         image = pg.image.load(path_to_file)
+#         image = pg.transform.scale(image, self.app.RES)
+#         pixel_array = pg.pixelarray.PixelArray(image)
+#         return pixel_array
 
     def get_prerendered_chars(self):
         char_colors = [(0, green, 0) for green in range(256)]
@@ -61,7 +63,7 @@ class Matrix:
 
     def draw(self):
             # Un/Comment this line allows you to use the webcam
-        #self.image = self.get_frame()
+        self.image = self.get_frame()
         for y, row in enumerate(self.matrix):
             for x, char in enumerate(row):
                 if char:
@@ -79,10 +81,10 @@ class Matrix:
 class MatrixVision:
     def __init__(self):
             # un/comment this line to use the webcam (adjust numbers for resolutions)
-        #self.RES = self.WIDTH, self.HEIGHT = 960, 720  # best resolution for camera
+        self.RES = self.WIDTH, self.HEIGHT = 960, 720  # best resolution for camera
 
             # un/comment this line to use image file you specify in self.image=
-        self.RES = self.WIDTH, self.HEIGHT = 1080, 720  # adjust for vertical pics
+        #self.RES = self.WIDTH, self.HEIGHT = 1080, 720  # adjust for vertical pics
 
         pg.init()
         self.screen = pg.display.set_mode(self.RES)
@@ -90,9 +92,10 @@ class MatrixVision:
         self.clock = pg.time.Clock()
         self.matrix = Matrix(self)
 
-        # pygame.camera.init()
-        # self.cam = pygame.camera.Camera(pygame.camera.list_cameras()[0])
-        # self.cam.start()
+            #un/comment this block to use the webcam
+        pygame.camera.init()
+        self.cam = pygame.camera.Camera(pygame.camera.list_cameras()[0])
+        self.cam.start()
 
     def draw(self):
         self.surface.fill(pg.Color('black'))
